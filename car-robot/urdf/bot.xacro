@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bot">
+
+  <!-- Параметры -->
+  <xacro:property name="wheel_radius" value="0.04" />
+  <xacro:property name="wheel_length" value="0.05" />
+  <xacro:property name="wheel_color_name" value="red" />
+  <xacro:property name="wheel_color_rgb" value="1 0 0 1" />
+
+  <!-- Макросы -->
+  <xacro:macro name="wheel" params="wheel_name">
+    <link name="${wheel_name}">
+      <visual>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_length}" />
+        </geometry>
+        <material name="${wheel_color_name}">
+          <color rgba="${wheel_color_rgb}"/>
+        </material>
+      </visual>
+    </link> 
+  </xacro:macro>
+
+  <xacro:macro name="box_link" params="name size color color_rgb" >
+    <link name="${name}">
+      <visual>
+        <geometry>
+          <box size="${size}"/>
+        </geometry>
+        <material name="${color}">
+          <color rgba="${color_rgb}"/>
+        </material>
+      </visual>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="static_joint" params="name parent child">
+    <joint name="${name}" type="fixed">
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="wheel_joint" params="name parent child xyz">
+    <joint name="${name}" type="continuous">
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <origin xyz="${xyz}" rpy="1.570796 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Составляющие -->
+  <xacro:box_link name="base_link" size="0 0 0" color="red" color_rgb="1 0 0 1" />
+  <xacro:box_link name="torso" size="0.6 0.3 0.1" color="green" color_rgb="0 1 0 1" />
+  <xacro:static_joint name="base_link_to_torso" parent="base_link" child="torso" />
+
+  <!-- Колеса -->
+  <xacro:wheel wheel_name="right_wheel_frontside" />
+  <xacro:wheel_joint name="base_link_right_wheel_frontside" parent="base_link" child="right_wheel_frontside" xyz="0.2 -0.2 -0.05" />
+
+  <xacro:wheel wheel_name="right_wheel_backside" />
+  <xacro:wheel_joint name="base_link_right_wheel_backside" parent="base_link" child="right_wheel_backside" xyz="-0.2 -0.2 -0.05" />
+
+  <xacro:wheel wheel_name="left_wheel_frontside" /> 
+  <xacro:wheel_joint name="base_link_left_wheel_frontside" parent="base_link" child="left_wheel_frontside" xyz="0.2 0.2 -0.05" />
+
+  <xacro:wheel wheel_name="left_wheel_backside" /> 
+  <xacro:wheel_joint name="base_link_left_wheel_backside" parent="base_link" child="left_wheel_backside" xyz="-0.2 0.2 -0.05" />
+
+</robot>
